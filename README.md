@@ -17,4 +17,4 @@ Este projeto centraliza instruções, prompts estruturados e regras operacionais
 ### Uso Local com Assistentes (ex.: GitHub Copilot)
 1. Clone este repositório no seu ambiente de desenvolvimento:
    ```bash
-   git clone [https://github.com/](https://github.com/)[SEU_USUARIO]/agent-skills-collection.git
+   git clone https://github.com/BAT333/agent-skills-collection.git
