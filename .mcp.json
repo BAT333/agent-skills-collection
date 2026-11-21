@@ -1,0 +1,12 @@
+{
+	"mcpServers": {
+		"teste-rapido-arquivos": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"~/Documentos/agent-skills-collection/testes"
+			]
+		}
+	}
+}
