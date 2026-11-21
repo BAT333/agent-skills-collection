@@ -1,12 +1,12 @@
 # Agent Skills Collection
 
-Repositório público destinado ao armazenamento, versionamento e documentação de **Custom Agents**, **Skills de IA** e **Servidores MCP (Model Context Protocol)** para uso integrado em ambientes Git e assistentes de desenvolvimento local (como VS Code e GitHub Copilot).
+Repositório público destinado ao armazenamento, versionamento e documentação de **Custom Agents**, **Skills de IA**, **Hooks** e **Servidores MCP (Model Context Protocol)** para uso integrado em ambientes Git e assistentes de desenvolvimento local (como VS Code e GitHub Copilot).
 
 ---
 
 ## 📌 Visão Geral
 
-Este projeto centraliza agentes customizados (`.agent.md`), instruções (`SKILL.md`), prompts estruturados, regras operacionais e conectores de contexto para IA. A estrutura foi desenhada para garantir consistência, reutilização e facilidade de manutenção à medida que o repositório se expande de um agente, skill e servidor inicial para uma coleção completa de capacidades para o assistente.
+Este projeto centraliza agentes customizados (`.agent.md`), instruções (`SKILL.md`), ganchos de ciclo de vida (**Hooks**), prompts estruturados, regras operacionais e conectores de contexto para IA. A estrutura foi desenhada para garantir consistência, reutilização e facilidade de manutenção à medida que o repositório se expande de um agente, skill e servidor inicial para uma coleção completa de capacidades para o assistente.
 
 ---
 
@@ -19,6 +19,8 @@ agent-skills-collection/
 ├── skills/
 │   └── arquiteto-universal-prompts/
 │       └── SKILL.md                      # Skill de engenharia de contexto e prompts
+├── hooks/                                # Scripts e configurações de referência de Hooks
+│   └── scripts/                          # Scripts auxiliares executados pelos hooks
 ├── mcp-servers/                          # Servidores MCP customizados (quando aplicável)
 ├── testes/                               # Pasta de testes para servidor de arquivos MCP
 ├── README.md
@@ -38,6 +40,11 @@ agent-skills-collection/
 | Skill (`kebab-case`) | Domínio | Caminho | Status |
 | :--- | :--- | :--- | :--- |
 | `arquiteto-universal-prompts` | Engenharia de Contexto e Prompts | `skills/arquiteto-universal-prompts/SKILL.md` | Ativa |
+
+### 🪝 Hooks
+| Hook / Evento | Escopo / Uso | Comportamento | Status |
+| :--- | :--- | :--- | :--- |
+| `sessionStart` (`Session Start`) | Workspace (`.github/hooks/`) ou Usuário (`~/.copilot/hooks/`) | Executa comandos/scripts automaticamente ao iniciar uma nova sessão do agente | Exemplo |
 
 ### 🔌 Servidores MCP (Model Context Protocol)
 | Nome do Servidor | Tipo de Transporte | Descrição / Função | Requisitos |
@@ -88,7 +95,36 @@ Tanto os **Custom Agents** (`.agent.md`) quanto as **Skills** (`SKILL.md`) funci
 
 ---
 
-### 🔌 2. Configurando Servidores MCP
+### 🪝 2. Configurando Hooks (Ciclo de Vida do Agente)
+
+**Hooks** são comandos ou scripts executados automaticamente em eventos do ciclo de vida da sessão do agente (como `sessionStart`, `User Prompt Submit`, `Pre-Tool Use` ou `Post-Tool Use`), permitindo auditar, validar, bloquear ações ou automatizar rotinas sem depender da escolha manual do modelo.
+
+#### Como criar e onde ficam os Hooks
+A pasta `.github/hooks/` **não existe por padrão** em novos projetos: você deve criá-la na raiz do repositório/workspace que deseja automatizar (ou criar o hook pela interface do VS Code).
+* **No Workspace (por projeto):** crie a pasta `.github/hooks/` na raiz do projeto aberto e coloque os arquivos `.json` lá dentro (se este próprio repositório for o workspace ativo, `.github/hooks/` na raiz dele será lido como hook de workspace).
+* **No Usuário (global):** `~/.copilot/hooks/*.json` (ou gerenciado via **`Chat: Open Customizations`** -> **Hooks** -> **`+`**, escolhendo **Workspace** ou **User**). Se quiser que um hook de usuário rode em qualquer projeto usando um script desta coleção, aponte o `"command"` do JSON para o script em `~/Documentos/agent-skills-collection/hooks/scripts/...`.
+
+#### Exemplo de Configuração (`sessionStart`)
+
+```json
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "command": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git add . || true"
+      }
+    ]
+  }
+}
+```
+
+> ⚠️ **Atenção:** Hooks rodam automaticamente no ciclo da sessão. Mantenha os comandos rápidos e avalie com cuidado ações que alterem o estado do repositório (como `git add .`) para evitar incluir arquivos temporários ou alterações não revisadas no *staging area*.
+
+---
+
+### 🔌 3. Configurando Servidores MCP
 
 Diferente das Skills e Agentes baseados em Markdown, os **Servidores MCP** exigem **declaração explícita de comandos e argumentos** no arquivo de configuração `mcp-config.json` (`~/.copilot/mcp-config.json`) ou `.vscode/mcp.json`.
 
@@ -180,7 +216,7 @@ Acesse a URL gerada (ex.: `http://127.0.0.1:6274`), navegue até a aba **Tools**
 
 ---
 
-## 🛠️ Como Adicionar Novos Agentes, Skills e Servidores
+## 🛠️ Como Adicionar Novos Agentes, Skills, Hooks e Servidores
 
 ### Criando um Novo Agente
 
@@ -204,6 +240,12 @@ skills/
     └── exemplos-ouro.md             # (Opcional) Casos de uso de referência
 ```
 
+### Criando um Novo Hook
+
+1. Crie o arquivo de configuração JSON em `.github/hooks/<nome-do-hook>.json` no workspace (ou em `~/.copilot/hooks/` para escopo de usuário; também é possível criar via **`Chat: Open Customizations`** -> **Hooks** -> **`+`**).
+2. Caso precise de lógica mais complexa, salve o script em `hooks/scripts/<nome-do-script>.js` (ou `.sh`/`.py`) e referencie-o no campo `"command"` do JSON.
+3. Teste o comando/script isoladamente no terminal e atualize a tabela de **Hooks** neste `README.md`.
+
 ### Criando um Novo Servidor MCP
 
 1. Adicione a implementação do seu servidor em uma pasta dedicada (ex.: `mcp-servers/<nome-do-servidor>/`).
@@ -214,5 +256,5 @@ skills/
 
 ## 📝 Versionamento e Histórico
 
-- **Commits:** Padronize as mensagens por escopo (ex.: `feat(agents): adiciona custom agent java-specialist`, `feat(mcp): adiciona suporte a servidor local python` ou `docs(readme): adiciona instrucoes de teste do mcp inspector`).
+- **Commits:** Padronize as mensagens por escopo (ex.: `feat(agents): adiciona custom agent java-specialist`, `feat(hooks): adiciona hook sessionStart`, `feat(mcp): adiciona suporte a servidor local python` ou `docs(readme): adiciona instrucoes de teste do mcp inspector`).
 - **Changelog:** Mantenha os registros de mudanças no arquivo `CHANGELOG.md` na raiz do repositório.
