@@ -40,6 +40,7 @@ agent-skills-collection/
 | Skill (`kebab-case`) | Domínio | Caminho | Status |
 | :--- | :--- | :--- | :--- |
 | `arquiteto-universal-prompts` | Engenharia de Contexto e Prompts | `skills/arquiteto-universal-prompts/SKILL.md` | Ativa |
+| `criador-de-skills` | Criação, Estruturação e Validação de Skills | `skills/criador-de-skills/SKILL.md` | Ativa |
 
 ### 🪝 Hooks
 | Hook / Evento | Escopo / Uso | Comportamento | Status |
