@@ -1,261 +1,237 @@
 # Agent Skills Collection
 
-Repositório público destinado ao armazenamento, versionamento e documentação de **Custom Agents**, **Skills de IA**, **Hooks** e **Servidores MCP (Model Context Protocol)** para uso integrado em ambientes Git e assistentes de desenvolvimento local (como VS Code e GitHub Copilot).
+Coleção pública de recursos personalizados para assistentes de IA em ambientes de desenvolvimento, incluindo Custom Agents, Agent Skills, instruções do repositório, Hooks e configuração MCP.
 
----
+## Estado atual
 
-## 📌 Visão Geral
+| Tipo | Implementação atual | Caminho |
+| :--- | :--- | :--- |
+| Custom Agent | Java-specialist | [.github/agents/java-specialist.agent.md](.github/agents/java-specialist.agent.md) |
+| Agent Skill | Arquitetura e padronização de prompts | [.github/skills/arquiteto-universal-prompts/](.github/skills/arquiteto-universal-prompts/) |
+| Agent Skill | Criação, revisão e validação de Skills | [.github/skills/criador-de-skills/](.github/skills/criador-de-skills/) |
+| Hook | `sessionStart` que prepara o workspace para staging | [.github/hooks/Commit.json](.github/hooks/Commit.json) |
+| Servidor MCP | Servidor de arquivos local via `npx` | [.mcp.json](.mcp.json) |
+| Instruções | Regras gerais do repositório | [AGENTS.md](AGENTS.md) |
+| Instruções Copilot | Regras específicas para GitHub Copilot | [.github/copilot-instructions.md](.github/copilot-instructions.md) |
 
-Este projeto centraliza agentes customizados (`.agent.md`), instruções (`SKILL.md`), ganchos de ciclo de vida (**Hooks**), prompts estruturados, regras operacionais e conectores de contexto para IA. A estrutura foi desenhada para garantir consistência, reutilização e facilidade de manutenção à medida que o repositório se expande de um agente, skill e servidor inicial para uma coleção completa de capacidades para o assistente.
+Os diretórios `agents/`, `skills/`, `hooks/` e `mcp-servers/` não existem na raiz. Os recursos ativos estão organizados conforme a estrutura de descoberta do VS Code/GitHub Copilot em `.github/`.
 
----
-
-## 📁 Estrutura do Repositório
+## Estrutura real
 
 ```text
 agent-skills-collection/
-├── agents/
-│   └── java-specialist.agent.md          # Custom Agent especializado em Java
-├── skills/
-│   └── arquiteto-universal-prompts/
-│       └── SKILL.md                      # Skill de engenharia de contexto e prompts
-├── hooks/                                # Scripts e configurações de referência de Hooks
-│   └── scripts/                          # Scripts auxiliares executados pelos hooks
-├── mcp-servers/                          # Servidores MCP customizados (quando aplicável)
-├── testes/                               # Pasta de testes para servidor de arquivos MCP
+├── .github/
+│   ├── agents/
+│   │   └── java-specialist.agent.md
+│   ├── hooks/
+│   │   └── Commit.json
+│   ├── skills/
+│   │   ├── AGENTS.md
+│   │   ├── arquiteto-universal-prompts/
+│   │   │   ├── SKILL.md
+│   │   │   └── references/
+│   │   └── criador-de-skills/
+│   │       ├── SKILL.md
+│   │       ├── README.md
+│   │       ├── assets/
+│   │       ├── references/
+│   │       └── scripts/
+│   └── copilot-instructions.md
+├── .mcp.json
+├── AGENTS.md
 ├── README.md
-└── CHANGELOG.md
+└── testes/
 ```
 
----
+## Recursos
 
-## 🗺️ Índice de Recursos
+### Custom Agent
 
-### 🤖 Custom Agents
-| Agente (`kebab-case`) | Domínio / Escopo | Caminho | Status |
-| :--- | :--- | :--- | :--- |
-| `Java-specialist` | Arquitetura, análise e refatoração modular em Java (leitura por padrão; edição apenas quando explicitamente solicitado, sem execução autônoma de terminal) | `agents/java-specialist.agent.md` | Ativo |
+| Recurso | Finalidade | Comportamento |
+| :--- | :--- | :--- |
+| `Java-specialist` | Desenvolvimento, revisão arquitetural e refatoração em Java | Somente leitura por padrão; edição somente mediante solicitação explícita; não usa terminal automaticamente |
 
-### 🧠 Agent Skills
-| Skill (`kebab-case`) | Domínio | Caminho | Status |
-| :--- | :--- | :--- | :--- |
-| `arquiteto-universal-prompts` | Engenharia de Contexto e Prompts | `skills/arquiteto-universal-prompts/SKILL.md` | Ativa |
-| `criador-de-skills` | Criação, Estruturação e Validação de Skills | `skills/criador-de-skills/SKILL.md` | Ativa |
+Arquivo: [.github/agents/java-specialist.agent.md](.github/agents/java-specialist.agent.md)
 
-### 🪝 Hooks
-| Hook / Evento | Escopo / Uso | Comportamento | Status |
-| :--- | :--- | :--- | :--- |
-| `sessionStart` (`Session Start`) | Workspace (`.github/hooks/`) ou Usuário (`~/.copilot/hooks/`) | Executa comandos/scripts automaticamente ao iniciar uma nova sessão do agente | Exemplo |
+O arquivo contém a entrada `[PREENCHER_VALOR]` para versão do JDK, build tool e framework até esses dados serem definidos pelo projeto alvo.
 
-### 🔌 Servidores MCP (Model Context Protocol)
-| Nome do Servidor | Tipo de Transporte | Descrição / Função | Requisitos |
-| :--- | :--- | :--- | :--- |
-| `teste-rapido-arquivos` | `stdio` (`npx`) | Acesso seguro a leitura/escrita de arquivos locais | Node.js / NPM e pasta de testes criada |
-| `servidor-http-remoto` | `HTTP` (`url`) | Conexão a endpoints MCP remotos ou locais via HTTP | Serviço HTTP ativo e token de acesso |
-| `google-drive` | `stdio` (`npx`) | Integração para leitura e busca no Google Drive | API Drive ativa no GCP e credenciais OAuth |
-| `meu-servidor-local` | `stdio` (`python3`) | Servidor personalizado em Python para regras/tools customizadas | Python 3 e script `servidor.py` implementado |
+### Agent Skills
 
----
+| Recurso | Finalidade | Arquivos complementares |
+| :--- | :--- | :--- |
+| `arquiteto-universal-prompts` | Criar, auditar e padronizar prompts multi-modelo | `references/frameworks.md`, `references/regras-anti-alucinacao.md`, `references/exemplos-ouro.md` |
+| `criador-de-skills` | Criar, revisar, organizar e testar Agent Skills | `references/`, `assets/` e `scripts/validate_skill.py` |
 
-## 🚀 Como Utilizar no VS Code (GitHub Copilot)
+Arquivos principais:
 
-### 🤖 1. Configurando Custom Agents e Agent Skills
+- [.github/skills/arquiteto-universal-prompts/SKILL.md](.github/skills/arquiteto-universal-prompts/SKILL.md)
+- [.github/skills/criador-de-skills/SKILL.md](.github/skills/criador-de-skills/SKILL.md)
 
-Tanto os **Custom Agents** (`.agent.md`) quanto as **Skills** (`SKILL.md`) funcionam por descoberta automática de pastas locais configuradas no VS Code.
+### Hook
 
-1. **Clonar o Repositório:**
-   ```bash
-   git clone https://github.com/BAT333/agent-skills-collection.git ~/Documentos/agent-skills-collection
-   ```
+O arquivo [.github/hooks/Commit.json](.github/hooks/Commit.json) registra um hook `sessionStart` com o seguinte comando:
 
-2. **Garantir a existência das pastas `agents/` e `skills/`:**
-   Confirme que existem os diretórios `~/Documentos/agent-skills-collection/agents` e `~/Documentos/agent-skills-collection/skills` (o nome da pasta no disco deve corresponder exatamente ao configurado no `settings.json`).
+```text
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git add . || true
+```
 
-3. **Ativar no `settings.json` do VS Code (Nível de Usuário):**
-   - Abra a Paleta de Comandos (`Ctrl + Shift + P`).
-   - Selecione **`Preferences: Open User Settings (JSON)`**.
-   - Adicione `chat.agentSkillsLocations` e `chat.agentFilesLocations` apontando para as pastas `skills` e `agents`:
-     ```json
-     {
-       "chat.useAgentSkills": true,
-       "chat.agentSkillsLocations": {
-         "~/Documentos/agent-skills-collection/skills": true
-       },
-       "chat.agentFilesLocations": {
-         "~/Documentos/agent-skills-collection/agents": true
-       },
-       "chat.viewSessions.orientation": "stacked"
-     }
-     ```
-   > **Nota de sintaxe e escopo:** Use o prefixo `~/` para indicar a pasta home do usuário em sistemas Linux/macOS (caso o ambiente não expanda `~`, utilize `/home/rafael-alves/...`). Configurar no `settings.json` do usuário disponibiliza os agentes e skills em todos os workspaces. Convenções gerais específicas de um repositório devem ficar em `.github/copilot-instructions.md` dentro do próprio projeto.
+> **Aviso de segurança:** esse hook pode adicionar a todos os arquivos não ignorados à área de staging assim que uma sessão iniciar. Revise o comando e o repositório antes de ativá-lo. Para evitar staging automático, remova o hook, desabilite-o no cliente ou substitua o comando por uma operação sem efeitos no Git.
 
-4. **Carregar e Invocar no Copilot Chat:**
-   - Após criar ou alterar arquivos/configurações, abra a Paleta de Comandos (`Ctrl + Shift + P`), execute **`Developer: Reload Window`** (se necessário) e valide em **`Chat: Open Customizations`**.
-   - **Agente (`Java-specialist`):** no Copilot Chat, abra o seletor de agentes/modos e escolha **`Java-specialist`**. Opera em leitura por padrão e realiza edição apenas quando explicitamente solicitado.
-   - **Skill (`arquiteto-universal-prompts`):** no Copilot Chat (modo **Agent**), digite `/` seguido da Skill (ex.: `/arquiteto-universal-prompts`).
+Não há scripts auxiliares de Hook implementados neste repositório.
 
----
+### Servidor MCP
 
-### 🪝 2. Configurando Hooks (Ciclo de Vida do Agente)
+A configuração [.mcp.json](.mcp.json) define um único servidor:
 
-**Hooks** são comandos ou scripts executados automaticamente em eventos do ciclo de vida da sessão do agente (como `sessionStart`, `User Prompt Submit`, `Pre-Tool Use` ou `Post-Tool Use`), permitindo auditar, validar, bloquear ações ou automatizar rotinas sem depender da escolha manual do modelo.
+| Servidor | Transporte | Configuração atual |
+| :--- | :--- | :--- |
+| `teste-rapido-arquivos` | `stdio` via `npx` | `@modelcontextprotocol/server-filesystem` com acesso à pasta `testes/` |
 
-#### Como criar e onde ficam os Hooks
-A pasta `.github/hooks/` **não existe por padrão** em novos projetos: você deve criá-la na raiz do repositório/workspace que deseja automatizar (ou criar o hook pela interface do VS Code).
-* **No Workspace (por projeto):** crie a pasta `.github/hooks/` na raiz do projeto aberto e coloque os arquivos `.json` lá dentro (se este próprio repositório for o workspace ativo, `.github/hooks/` na raiz dele será lido como hook de workspace).
-* **No Usuário (global):** `~/.copilot/hooks/*.json` (ou gerenciado via **`Chat: Open Customizations`** -> **Hooks** -> **`+`**, escolhendo **Workspace** ou **User**). Se quiser que um hook de usuário rode em qualquer projeto usando um script desta coleção, aponte o `"command"` do JSON para o script em `~/Documentos/agent-skills-collection/hooks/scripts/...`.
-
-#### Exemplo de Configuração (`sessionStart`)
+Exemplo já declarado no repositório:
 
 ```json
 {
-  "version": 1,
-  "hooks": {
-    "sessionStart": [
-      {
-        "type": "command",
-        "command": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git add . || true"
-      }
-    ]
+  "mcpServers": {
+    "teste-rapido-arquivos": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "~/Documentos/agent-skills-collection/testes"
+      ]
+    }
   }
 }
 ```
 
-> ⚠️ **Atenção:** Hooks rodam automaticamente no ciclo da sessão. Mantenha os comandos rápidos e avalie com cuidado ações que alterem o estado do repositório (como `git add .`) para evitar incluir arquivos temporários ou alterações não revisadas no *staging area*.
+O argumento com `~` pode não ser expandido por todos os clientes. Se necessário, use o caminho absoluto da pasta `testes/` no ambiente.
 
----
+## Uso no VS Code
 
-### 🔌 3. Configurando Servidores MCP
+### Descoberta dos recursos deste repositório
 
-Diferente das Skills e Agentes baseados em Markdown, os **Servidores MCP** exigem **declaração explícita de comandos e argumentos** no arquivo de configuração `mcp-config.json` (`~/.copilot/mcp-config.json`) ou `.vscode/mcp.json`.
+Abra este repositório no VS Code. Recursos em `.github/agents/`, `.github/skills/` e `.github/copilot-instructions.md` podem ser descobertos pelo GitHub Copilot conforme o suporte da versão instalada do VS Code.
 
-#### Estrutura Recomendada do `mcp-config.json`
+Depois de alterar ou instalar os recursos:
 
-```json
-{
-	"mcpServers": {
-		"teste-rapido-arquivos": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"@modelcontextprotocol/server-filesystem",
-				"/home/rafael-alves/Documentos/agent-skills-collection/testes"
-			]
-		},
-		"servidor-http-remoto": {
-			"url": "http://localhost:3000/mcp",
-			"headers": {
-				"Authorization": "Bearer SEU_TOKEN_AQUI"
-			}
-		},
-		"google-drive": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"@modelcontextprotocol/server-gdrive"
-			],
-			"env": {
-				"GDRIVE_CREDENTIALS_PATH": "/home/rafael-alves/.config/gdrive/gcp-oauth.keys.json"
-			}
-		},
-		"meu-servidor-local": {
-			"command": "python3",
-			"args": [
-				"/home/rafael-alves/Documentos/agent-skills-collection/seu-servidor/servidor.py"
-			]
-		}
-	}
-}
-```
+1. Execute **Developer: Reload Window** pela Paleta de Comandos.
+2. Abra **Chat: Open Customizations**.
+3. Confirme que `Java-specialist` e as duas Skills aparecem sem erros.
 
-> ⚠️ **Atenção em Servidores `stdio`:** Evite utilizar comandos como `print()` no Python ou `console.log()` no Node enviando texto livre para a saída padrão (`stdout`), pois isso corrompe o protocolo JSON-RPC do MCP. Escreva mensagens de depuração em `stderr` ou em arquivos de log.
+No Copilot Chat:
 
----
+- Selecione `Java-specialist` no seletor de agentes/modos.
+- Solicite explicitamente antes de permitir edição de arquivos.
+- Para as Skills, use o nome da Skill no cliente que suportar acionamento manual por nome ou deixe o Copilot descobrir o recurso pelo contexto da solicitação.
 
-## 🧪 Como Testar os Agentes e Servidores MCP
+Se o projeto usar outra configuração de discovery, aponte as Skills e agentes para os diretórios reais:
 
-### 🤖 Testando o Custom Agent `Java-specialist` no VS Code
+- Skills: `.github/skills/`
+- Custom Agent: `.github/agents/`
+- Instruções: `.github/copilot-instructions.md`
 
-1. **Descoberta e carregamento:** abra **`Chat: Open Customizations`** (`Ctrl + Shift + P`) e confirme que **`Java-specialist`** aparece listado na seção de agentes do usuário sem erros de YAML.
-2. **Leitura e diagnóstico sem escrita:** com um projeto Java aberto no VS Code, selecione **`Java-specialist`** no Copilot Chat e peça análise do `pom.xml` (ou `build.gradle`) e de `src/main/java`. Valide que ele não altera arquivos, não executa comandos no terminal sem autorização, separa **Fatos / Inferências / Recomendações** e sinaliza informações ausentes com `[PREENCHER_VALOR]`.
-3. **Trava de segurança contra edição não solicitada:** peça uma sugestão de melhoria em uma classe sem autorizar escrita e confirme que nenhum arquivo em disco é modificado.
-4. **Edição cirúrgica autorizada:** solicite explicitamente uma alteração pontual em um arquivo/método específico e valide que apenas o escopo autorizado foi alterado.
+Os nomes e locais acima são os definidos pelo estado atual deste repositório; não presuma suporte a uma convenção que não tenha sido verificada na versão do cliente.
 
----
+### Servidor MCP
 
-### 🔌 Testando os Servidores MCP
+1. Confirme que Node.js e `npx` estão disponíveis.
+2. Reabra o workspace após adicionar ou alterar `.mcp.json`.
+3. Abra **Chat: Open Customizations** ou a configuração MCP suportada pela versão do VS Code.
+4. Verifique se `teste-rapido-arquivos` está ativo e se as ferramentas de arquivos aparecem para o modo Agent.
 
-Para garantir a estabilidade do ambiente, o teste dos servidores MCP deve ser realizado em 3 etapas progressivas:
-
-#### Etapa 1: Teste Isolado no Terminal (Handshake JSON-RPC)
-Valide se o processo Python ou Node responde corretamente sem saídas inválidas:
+Se o cliente não expandir `~` no argumento, substitua o valor por um caminho absoluto.
 
 ```bash
-printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"teste-cli","version":"1.0.0"}}}\n{"jsonrpc":"2.0","id":2,"method":"notifications/initialized","params":{}}\n{"jsonrpc":"2.0","id":3,"method":"tools/list","params":{}}\n' | python3 /home/rafael-alves/Documentos/agent-skills-collection/seu-servidor/servidor.py
+npx -y @modelcontextprotocol/server-filesystem \
+  /home/rafael-alves/Documentos/agent-skills-collection/testes
 ```
 
-#### Etapa 2: Teste Visual com MCP Inspector
-Utilize a ferramenta oficial para inspecionar e chamar ferramentas (`tools`) interativamente no navegador:
+Use permissões assistidas e conceda acesso apenas à pasta necessária.
+
+## Validação
+
+### Skills
+
+Ambas as Skills foram validadas com o script auxiliar incluído no repositório:
 
 ```bash
-# Para servidor de arquivos (Node)
-npx @modelcontextprotocol/inspector npx -y @modelcontextprotocol/server-filesystem /home/rafael-alves/Documentos/agent-skills-collection/testes
+python3 .github/skills/criador-de-skills/scripts/validate_skill.py \
+  .github/skills/arquiteto-universal-prompts
 
-# Para servidor local Python
-npx @modelcontextprotocol/inspector python3 /home/rafael-alves/Documentos/agent-skills-collection/seu-servidor/servidor.py
+python3 .github/skills/criador-de-skills/scripts/validate_skill.py \
+  .github/skills/criador-de-skills
 ```
 
-Acesse a URL gerada (ex.: `http://127.0.0.1:6274`), navegue até a aba **Tools** e execute testes individuais.
+O script realiza verificações auxiliares de estrutura e frontmatter. Ele não substitui `skills-ref validate`, o parser do cliente nem testes funcionais no agente de destino.
 
-#### Etapa 3: Execução no Copilot Chat (VS Code)
-1. Certifique-se de que os servidores estão ativos no VS Code.
-2. Abra o **Copilot Chat**, defina a caixa de seleção de modo para **Agent**.
-3. No ícone de engrenagem/ferramentas (**Tools**), verifique se as ferramentas do servidor estão listadas e marcadas.
-4. Defina a política de permissão em **Assisted permissions** (recomendado).
-5. Envie um comando direto e explicito:
-   > *"Use a ferramenta de arquivos MCP para ler `/home/rafael-alves/Documentos/agent-skills-collection/testes/Teste.txt`."*
+Se estiver disponível no ambiente, use também:
 
----
-
-## 🛠️ Como Adicionar Novos Agentes, Skills, Hooks e Servidores
-
-### Criando um Novo Agente
-
-Crie um arquivo `<nome-do-agente>.agent.md` em `agents/` com frontmatter YAML (`name`, `description` e `tools`) e instruções operacionais em Markdown:
-
-```text
-agents/
-└── <nome-do-agente>.agent.md
+```bash
+skills-ref validate .github/skills/arquiteto-universal-prompts
+skills-ref validate .github/skills/criador-de-skills
 ```
 
-### Criando uma Nova Skill
+### Custom Agent
 
-Crie uma pasta em `skills/<nome-da-skill>/` contendo obrigatoriamente um arquivo `SKILL.md`:
+Validação manual recomendada:
 
-```text
-skills/
-└── <nome-da-skill>/
-    ├── SKILL.md                     # (Obrigatório) Instruções e regras principais da Skill
-    ├── frameworks.md                # (Opcional) Estruturas técnicas e padrões
-    ├── regras-anti-alucinacao.md    # (Opcional) Guardrails e critérios de validação
-    └── exemplos-ouro.md             # (Opcional) Casos de uso de referência
-```
+1. Abra `Chat: Open Customizations` e confirme que `Java-specialist` aparece.
+2. Solicite uma análise Java sem autorizar escrita.
+3. Confirme que nenhum arquivo foi alterado e que o resultado separa fatos, inferências e recomendações.
+4. Solicite explicitamente uma edição pontual e valide que apenas o trecho autorizado foi alterado.
 
-### Criando um Novo Hook
+### MCP
 
-1. Crie o arquivo de configuração JSON em `.github/hooks/<nome-do-hook>.json` no workspace (ou em `~/.copilot/hooks/` para escopo de usuário; também é possível criar via **`Chat: Open Customizations`** -> **Hooks** -> **`+`**).
-2. Caso precise de lógica mais complexa, salve o script em `hooks/scripts/<nome-do-script>.js` (ou `.sh`/`.py`) e referencie-o no campo `"command"` do JSON.
-3. Teste o comando/script isoladamente no terminal e atualize a tabela de **Hooks** neste `README.md`.
+Validação funcional mínima:
 
-### Criando um Novo Servidor MCP
+1. Inicie o servidor MCP pela configuração do cliente.
+2. Confirme que o servidor aparece como ativo e que suas ferramentas estão disponíveis.
+3. Peça ao agente para listar ou ler um arquivo existente dentro da pasta `testes/`.
+4. Não conceda acesso a diretórios fora da pasta configurada.
 
-1. Adicione a implementação do seu servidor em uma pasta dedicada (ex.: `mcp-servers/<nome-do-servidor>/`).
-2. Adicione o novo bloco em `mcpServers` no arquivo `mcp-config.json`.
-3. Atualize as tabelas do **Índice de Recursos** neste `README.md`.
+Não há servidores HTTP, Google Drive ou servidores Python implementados neste repositório no estado atual.
 
----
+## Como adicionar recursos
 
-## 📝 Versionamento e Histórico
+### Novo Custom Agent
 
-- **Commits:** Padronize as mensagens por escopo (ex.: `feat(agents): adiciona custom agent java-specialist`, `feat(hooks): adiciona hook sessionStart`, `feat(mcp): adiciona suporte a servidor local python` ou `docs(readme): adiciona instrucoes de teste do mcp inspector`).
-- **Changelog:** Mantenha os registros de mudanças no arquivo `CHANGELOG.md` na raiz do repositório.
+Crie `.github/agents/<nome-do-agente>.agent.md` com frontmatter YAML válido e instruções operacionais. Use `kebab-case` para o nome do arquivo e mantenha as ferramentas declaradas alinhadas às capacidades reais.
+
+### Nova Agent Skill
+
+Crie `.github/skills/<nome-da-skill>/SKILL.md`. Adicione `references/`, `assets/` ou `scripts/` somente quando justificarem uso.
+
+Regras principais:
+
+- frontmatter com `name` e `description`;
+- nome em `kebab-case`, sem caracteres acentuados;
+- descrição com propósito e gatilhos de acionamento;
+- links relativos válidos;
+- critérios de qualidade e recuperação de erros;
+- validação estática e casos positivos, negativos e ambíguos.
+
+Consulte [.github/skills/criador-de-skills/SKILL.md](.github/skills/criador-de-skills/SKILL.md) para o fluxo completo.
+
+### Novo Hook
+
+Crie `.github/hooks/<nome>.json` ou configure o hook no escopo de usuário suportado pelo cliente.
+
+Antes de publicar, revise os efeitos do comando, trate erros e evite operações destrutivas ou alterações automáticas no repositório sem autorização.
+
+### Novo servidor MCP
+
+Adicione a configuração em `.mcp.json` ou em outro arquivo de MCP suportado pelo cliente. Documente transporte, comando, argumentos, dependências, variáveis de ambiente e limite de acesso.
+
+Não adicione credenciais a arquivos versionados. Use variáveis de ambiente ou mecanismos seguros do cliente.
+
+## Versionamento
+
+Use Commits Convencionais em inglês para alterações relevantes:
+
+- `feat(agents): add Java specialist`
+- `feat(skills): add skill creator`
+- `feat(hooks): add session start hook`
+- `feat(mcp): add local filesystem server`
+- `docs(readme): synchronize repository documentation`
+
+Mudanças relevantes são registradas em [CHANGELOG.md](CHANGELOG.md).
