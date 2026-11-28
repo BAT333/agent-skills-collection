@@ -6,6 +6,11 @@ O formato é baseado em Keep a Changelog e adota Semantic Versioning quando houv
 
 ## [Unreleased]
 
+### Added
+
+- Adicionou a Agent Skill `gerador-readme-tecnico` para análise baseada em evidências e geração revisada de README técnico.
+- Adicionou documentação individual da Skill em `.github/skills/gerador-readme-tecnico/README.md`.
+
 ### Documentação
 
 - Sincronizou o README com a estrutura real dos recursos.

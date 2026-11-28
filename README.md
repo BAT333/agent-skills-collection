@@ -9,6 +9,7 @@ Coleção pública de recursos personalizados para assistentes de IA em ambiente
 | Custom Agent | Java-specialist | [.github/agents/java-specialist.agent.md](.github/agents/java-specialist.agent.md) |
 | Agent Skill | Arquitetura e padronização de prompts | [.github/skills/arquiteto-universal-prompts/](.github/skills/arquiteto-universal-prompts/) |
 | Agent Skill | Criação, revisão e validação de Skills | [.github/skills/criador-de-skills/](.github/skills/criador-de-skills/) |
+| Agent Skill | Geração revisada de README técnico | [.github/skills/gerador-readme-tecnico/](.github/skills/gerador-readme-tecnico/) |
 | Hook | `sessionStart` que prepara o workspace para staging | [.github/hooks/Commit.json](.github/hooks/Commit.json) |
 | Servidor MCP | Servidor de arquivos local via `npx` | [.mcp.json](.mcp.json) |
 | Instruções | Regras gerais do repositório | [AGENTS.md](AGENTS.md) |
@@ -30,12 +31,15 @@ agent-skills-collection/
 │   │   ├── arquiteto-universal-prompts/
 │   │   │   ├── SKILL.md
 │   │   │   └── references/
-│   │   └── criador-de-skills/
+│   │   ├── criador-de-skills/
+│   │   │   ├── SKILL.md
+│   │   │   ├── README.md
+│   │   │   ├── assets/
+│   │   │   ├── references/
+│   │   │   └── scripts/
+│   │   └── gerador-readme-tecnico/
 │   │       ├── SKILL.md
-│   │       ├── README.md
-│   │       ├── assets/
-│   │       ├── references/
-│   │       └── scripts/
+│   │       └── README.md
 │   └── copilot-instructions.md
 ├── .mcp.json
 ├── AGENTS.md
@@ -61,11 +65,13 @@ O arquivo contém a entrada `[PREENCHER_VALOR]` para versão do JDK, build tool 
 | :--- | :--- | :--- |
 | `arquiteto-universal-prompts` | Criar, auditar e padronizar prompts multi-modelo | `references/frameworks.md`, `references/regras-anti-alucinacao.md`, `references/exemplos-ouro.md` |
 | `criador-de-skills` | Criar, revisar, organizar e testar Agent Skills | `references/`, `assets/` e `scripts/validate_skill.py` |
+| `gerador-readme-tecnico` | Analisar projetos fornecidos e produzir README técnico revisado pelo usuário | Nenhum arquivo auxiliar |
 
 Arquivos principais:
 
 - [.github/skills/arquiteto-universal-prompts/SKILL.md](.github/skills/arquiteto-universal-prompts/SKILL.md)
 - [.github/skills/criador-de-skills/SKILL.md](.github/skills/criador-de-skills/SKILL.md)
+- [.github/skills/gerador-readme-tecnico/SKILL.md](.github/skills/gerador-readme-tecnico/SKILL.md)
 
 ### Hook
 
@@ -160,6 +166,9 @@ python3 .github/skills/criador-de-skills/scripts/validate_skill.py \
 
 python3 .github/skills/criador-de-skills/scripts/validate_skill.py \
   .github/skills/criador-de-skills
+
+python3 .github/skills/criador-de-skills/scripts/validate_skill.py \
+  .github/skills/gerador-readme-tecnico
 ```
 
 O script realiza verificações auxiliares de estrutura e frontmatter. Ele não substitui `skills-ref validate`, o parser do cliente nem testes funcionais no agente de destino.
@@ -169,6 +178,7 @@ Se estiver disponível no ambiente, use também:
 ```bash
 skills-ref validate .github/skills/arquiteto-universal-prompts
 skills-ref validate .github/skills/criador-de-skills
+skills-ref validate .github/skills/gerador-readme-tecnico
 ```
 
 ### Custom Agent
